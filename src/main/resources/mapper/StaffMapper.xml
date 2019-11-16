@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.ssmspringboot.dao.mappers.StaffMapper" >
+
+   <resultMap id="BaseResultMap" type="com.example.ssmspringboot.domain.Staff" >
+            <id column="Staff_no" jdbcType="VARCHAR" property="Staff_no" />
+            <result column="Staff_name" jdbcType="VARCHAR" property="Staff_name" />
+            <result column="Password" jdbcType="VARCHAR" property="Password" />
+            <result column="Department" jdbcType="VARCHAR" property="Department" />
+            <result column="Workshop" jdbcType="VARCHAR" property="Workshop" />
+            <result column="Authority" jdbcType="BIGINT" property="Authority" />
+            <result column="Busy" jdbcType="BIGINT" property="Busy" />
+            <result column="Position" jdbcType="VARCHAR" property="Position" />
+            <result column="Details" jdbcType="VARCHAR" property="Details" />
+    </resultMap>
+
+
+
+    <!--select id="findByStaff_no"  resultType="Staff">
+        SELECT * FROM Staff WHERE Staff_no = #{Staff_no}
+    </select>
+
+    <select id="countByStaff_no"  resultType="java.lang.Integer">
+        SELECT count(*) FROM Staff WHERE Staff_no = #{Staff_no}
+    </select>
+
+    <delete id="deleteByStaff_no">
+         delete from Staff where Staff_no= #{Staff_no}
+    </delete>
+
+    <insert id="insertStaff">
+         insert into Staff(Staff_no,Staff_name) values(#{Staff_no},#{Staff_name})
+    </insert-->
+
+
+    <select id="exist_or_not"  resultType="java.lang.Integer">
+            SELECT count(*) FROM Staff WHERE Staff_no = #{Staff_no}
+    </select>
+
+    <sql id="Example_Where_Clause">
+        <where>
+          <foreach collection="oredCriteria" item="criteria" separator="or">
+            <if test="criteria.valid">
+              <trim prefix="(" prefixOverrides="and" suffix=")">
+                <foreach collection="criteria.criteria" item="criterion">
+                  <choose>
+                    <when test="criterion.noValue">
+                      and ${criterion.condition}
+                    </when>
+                    <when test="criterion.singleValue">
+                      and ${criterion.condition} #{criterion.value}
+                    </when>
+                    <when test="criterion.betweenValue">
+                      and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                    </when>
+                    <when test="criterion.listValue">
+                      and ${criterion.condition}
+                      <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                        #{listItem}
+                      </foreach>
+                    </when>
+                  </choose>
+                </foreach>
+              </trim>
+            </if>
+          </foreach>
+        </where>
+      </sql>
+
+
+      <sql id="Update_By_Example_Where_Clause">
+        <where>
+          <foreach collection="example.oredCriteria" item="criteria" separator="or">
+            <if test="criteria.valid">
+              <trim prefix="(" prefixOverrides="and" suffix=")">
+                <foreach collection="criteria.criteria" item="criterion">
+                  <choose>
+                    <when test="criterion.noValue">
+                      and ${criterion.condition}
+                    </when>
+                    <when test="criterion.singleValue">
+                      and ${criterion.condition} #{criterion.value}
+                    </when>
+                    <when test="criterion.betweenValue">
+                      and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                    </when>
+                    <when test="criterion.listValue">
+                      and ${criterion.condition}
+                      <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                        #{listItem}
+                      </foreach>
+                    </when>
+                  </choose>
+                </foreach>
+              </trim>
+            </if>
+          </foreach>
+        </where>
+      </sql>
+
+
+      <sql id="Base_Column_List">
+        Staff_no,   Staff_name, Password,   Department, Workshop,
+        Authority,  Busy,       Position,   Details
+      </sql>
+
+
+      <select id="selectByExample" parameterType="com.example.ssmspringboot.dao.Example.StaffExample" resultMap="BaseResultMap">
+        select
+        <if test="distinct">
+          distinct
+        </if>
+        <include refid="Base_Column_List" />
+        from Staff
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause" />
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+      </select>
+
+        <select id="select_Department_orderBy_Busy" resultMap="BaseResultMap">
+            select *
+            from Staff
+            where Department = #{Department}
+            order by Busy
+        </select>
+
+
+        <select id="selectBy_partName_or_partNo" resultMap="BaseResultMap">
+            select *
+            from Staff
+            where Staff_no like '%${part1}%' or Staff_name like '%${part2}%'
+        </select>
+
+
+        <select id="orderBy_Authority" resultMap="BaseResultMap">
+            select *
+            from Staff
+            order by Authority desc
+        </select>
+
+
+
+        <select id="countBy_Name_and_Password" resultType="java.lang.Integer">
+            select count(*)
+            from Staff
+            where Staff_name = #{Staff_name,jdbcType=VARCHAR} and Password = #{Password,jdbcType=VARCHAR}
+        </select>
+
+        <select id="selectBy_Name_and_Password" resultMap="BaseResultMap">
+            select *
+            from Staff
+            where Staff_name = #{Staff_name,jdbcType=VARCHAR} and Password = #{Password,jdbcType=VARCHAR}
+        </select>
+
+
+
+
+
+        <select id="select_Biggest_Staff_no"  resultType="java.lang.String">
+            select Staff_no
+            from Staff
+            order by Staff_no desc
+            limit 1
+        </select>
+
+
+
+
+      <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from Staff
+        where Staff_no = #{Staff_no,jdbcType=VARCHAR}
+      </select>
+
+
+      <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete from Staff
+        where Staff_no = #{Staff_no,jdbcType=VARCHAR}
+      </delete>
+
+
+      <delete id="deleteByExample" parameterType="com.example.ssmspringboot.dao.Example.StaffExample">
+        delete from Staff
+        <if test="_parameter != null">
+          <include refid="Example_Where_Clause" />
+        </if>
+      </delete>
+
+
+      <insert id="insert" parameterType="com.example.ssmspringboot.domain.Staff">
+        insert
+        into Staff (Staff_no, Staff_name, Password, Department, Workshop,
+                    Authority, Busy, Position, Details)
+        values (#{Staff_no,jdbcType=VARCHAR},      #{Staff_name,jdbcType=VARCHAR},    #{Password,jdbcType=VARCHAR},
+                #{Department,jdbcType=VARCHAR},    #{Workshop,jdbcType=VARCHAR},      #{Authority,jdbcType=BIGINT},
+                #{Busy,jdbcType=BIGINT},           #{Position,jdbcType=VARCHAR},      #{Details,jdbcType=VARCHAR})
+      </insert>
+
+
+      <insert id="insertSelective" parameterType="com.example.ssmspringboot.domain.Staff">
+        insert into Staff
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+          <if test="Staff_no != null">
+            Staff_no,
+          </if>
+          <if test="Staff_name != null">
+            Staff_name,
+          </if>
+          <if test="Password != null">
+            Password,
+          </if>
+          <if test="Department != null">
+            Department,
+          </if>
+          <if test="Workshop != null">
+            Workshop,
+          </if>
+          <if test="Authority != null">
+            Authority,
+          </if>
+          <if test="Busy != null">
+            Busy,
+          </if>
+          <if test="Position != null">
+            Position,
+          </if>
+          <if test="Details != null">
+            Details,
+          </if>
+        </trim>
+
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+          <if test="Staff_no != null">
+            #{Staff_no,jdbcType=VARCHAR},
+          </if>
+          <if test="Staff_name != null">
+            #{Staff_name,jdbcType=VARCHAR},
+          </if>
+          <if test="Password != null">
+            #{Password,jdbcType=VARCHAR},
+          </if>
+          <if test="Department != null">
+            #{Department,jdbcType=VARCHAR},
+          </if>
+          <if test="Workshop != null">
+            #{Workshop,jdbcType=VARCHAR},
+          </if>
+          <if test="Authority != null">
+            #{Authority,jdbcType=BIGINT},
+          </if>
+          <if test="Busy != null">
+            #{Busy,jdbcType=BIGINT},
+          </if>
+          <if test="Position != null">
+            #{Position,jdbcType=VARCHAR},
+          </if>
+          <if test="Details != null">
+            #{Details,jdbcType=VARCHAR},
+          </if>
+        </trim>
+
+      </insert>
+
+
+      <select id="countByExample" parameterType="com.example.ssmspringboot.dao.Example.StaffExample" resultType="java.lang.Integer">
+        select count(*) from Staff
+        <if test="_parameter != null">
+          <include refid="Example_Where_Clause" />
+        </if>
+      </select>
+
+
+      <update id="updateByExampleSelective" parameterType="map">
+        update Staff
+        <set>
+          <if test="record.Staff_no != null">
+            Staff_no = #{record.Staff_no,jdbcType=VARCHAR},
+          </if>
+          <if test="record.Staff_name != null">
+            Staff_name = #{record.Staff_name,jdbcType=VARCHAR},
+          </if>
+          <if test="record.Password != null">
+            Password = #{record.Password,jdbcType=VARCHAR},
+          </if>
+          <if test="record.Department != null">
+            Department = #{record.Department,jdbcType=VARCHAR},
+          </if>
+          <if test="record.Workshop != null">
+            Workshop = #{record.Workshop,jdbcType=VARCHAR},
+          </if>
+          <if test="record.Authority != null">
+            Authority = #{record.Authority,jdbcType=BIGINT},
+          </if>
+          <if test="record.Busy != null">
+            Busy = #{record.Busy,jdbcType=BIGINT},
+          </if>
+          <if test="record.Position != null">
+            Position = #{record.Position,jdbcType=VARCHAR},
+          </if>
+          <if test="record.Details != null">
+            Details = #{record.Details,jdbcType=VARCHAR},
+          </if>
+        </set>
+        <if test="_parameter != null">
+          <include refid="Update_By_Example_Where_Clause" />
+        </if>
+      </update>
+
+
+      <update id="updateByExample" parameterType="map">
+        update Staff
+        set Staff_no = #{record.Staff_no,jdbcType=VARCHAR},
+            Staff_name = #{record.Staff_name,jdbcType=VARCHAR},
+            Password = #{record.Password,jdbcType=VARCHAR},
+            Department = #{record.Department,jdbcType=VARCHAR},
+            Workshop = #{record.Workshop,jdbcType=VARCHAR},
+            Authority = #{record.Authority,jdbcType=BIGINT},
+            Busy = #{record.Busy,jdbcType=BIGINT},
+            Position = #{record.Position,jdbcType=VARCHAR},
+            Details = #{record.Details,jdbcType=VARCHAR}
+
+        <if test="_parameter != null">
+          <include refid="Update_By_Example_Where_Clause" />
+        </if>
+      </update>
+
+
+      <update id="updateByPrimaryKeySelective" parameterType="com.example.ssmspringboot.domain.Staff">
+        update Staff
+        <set>
+          <if test="Staff_no != null">
+            Staff_no = #{Staff_no,jdbcType=VARCHAR},
+          </if>
+          <if test="Staff_name != null">
+            Staff_name = #{Staff_name,jdbcType=VARCHAR},
+          </if>
+          <if test="Password != null">
+            Password = #{Password,jdbcType=VARCHAR},
+          </if>
+          <if test="Department != null">
+            Department = #{Department,jdbcType=VARCHAR},
+          </if>
+          <if test="Workshop != null">
+            Workshop = #{Workshop,jdbcType=VARCHAR},
+          </if>
+          <if test="Authority != null">
+            Authority = #{Authority,jdbcType=BIGINT},
+          </if>
+          <if test="Busy != null">
+            Busy = #{Busy,jdbcType=BIGINT},
+          </if>
+          <if test="Position != null">
+            Position = #{Position,jdbcType=VARCHAR},
+          </if>
+          <if test="Details != null">
+            Details = #{Details,jdbcType=VARCHAR},
+          </if>
+        </set>
+        where Staff_no = #{Staff_no,jdbcType=VARCHAR}
+      </update>
+
+
+      <update id="updateByPrimaryKey" parameterType="com.example.ssmspringboot.domain.Staff">
+        update Staff
+        set Staff_no = #{Staff_no,jdbcType=VARCHAR},
+            Staff_name = #{Staff_name,jdbcType=VARCHAR},
+            Password = #{Password,jdbcType=VARCHAR},
+            Department = #{Department,jdbcType=VARCHAR},
+            Workshop = #{Workshop,jdbcType=VARCHAR},
+            Authority = #{Authority,jdbcType=BIGINT},
+            Busy = #{Busy,jdbcType=BIGINT},
+            Position = #{Position,jdbcType=VARCHAR},
+            Details = #{Details,jdbcType=VARCHAR}
+        where Staff_no = #{Staff_no,jdbcType=VARCHAR}
+      </update>
+
+
+</mapper>
